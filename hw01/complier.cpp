@@ -13,6 +13,7 @@ enum REGS {NONE, R1, R2, R3, R4, R5, R6, R7};
 std::map<std::string, unsigned>regs;
 
 int n_copy = 0;
+bool end_command = false;
 
 
 int get_n(std::string n);
@@ -77,7 +78,7 @@ int emulator(unsigned cond, command * cmds)
 }
 
 
-command complier(std::string prop)
+command asssemler(std::string prop)
 {
     int op = -1;
     int n1 = 0, n2 = 0;
@@ -103,14 +104,20 @@ command complier(std::string prop)
         case MOV:
         case NOT: {
             int idx_dot = args.find(',');
-
             n1 = get_n(args.substr(0, idx_dot));
 
             if (n1 == -1)
-                return -1;
+                    return -1;
 
-            std::string reg_s(args, idx_dot + 1); 
-            reg = get_reg(reg_s);
+            if (idx_dot == std::string::npos) {
+                end_command = true;
+                reg = 1;
+            }
+            else {
+                end_command = false;
+                std::string reg_s(args, idx_dot + 1); 
+                reg = get_reg(reg_s);
+            }
 
             return (op << 29) | (n1 << 16) | reg;
         }
@@ -122,15 +129,22 @@ command complier(std::string prop)
         case IFF:{
             int idx_dot1 = args.find(',');
             int idx_dot2 = args.rfind(',');
-            
+
             int n1 = get_n(args.substr(0, idx_dot1));
             int n2 = get_n(args.substr(idx_dot1 + 1, idx_dot2 - idx_dot1 - 1));
 
             if (n1 == -1 || n2 == -1)
                 return -1;
 
-            std::string reg_s(args, idx_dot2 + 1);
-            reg = get_reg(reg_s);
+            if (idx_dot1 == idx_dot2) {
+                end_command = true;
+                reg = 1;
+            }
+            else {
+                end_command = false;
+                std::string reg_s(args, idx_dot2 + 1); 
+                reg = get_reg(reg_s);
+            }
 
             return (op << 29) | (n1 << 16) | (n2 << 3) | reg; 
         }
@@ -205,4 +219,9 @@ int get_reg(std::string reg)
 void copy_n(int n)
 {
     n_copy = n;
+}
+
+bool is_last_command() 
+{
+    return end_command;
 }

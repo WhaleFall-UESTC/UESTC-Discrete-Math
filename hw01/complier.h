@@ -12,6 +12,7 @@ typedef int command;
 
 
 int emulator(unsigned cond, command * cmds);
-command complier(std::string prop);
+command asssemler(std::string prop);
 void init_map();
 void copy_n(int n);
+bool is_last_command();

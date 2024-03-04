@@ -22,7 +22,7 @@ int main()
     log_int(INFO, "The number of people is", n);
 
     const int N = n;
-    const int S = 2 << n - 1;
+    const int S = 1 << n;
     copy_n(n);
     int situations[S] = {};
     int cnt_ok = 0;
@@ -39,7 +39,7 @@ int main()
             getline(cin, cmd);
             log(INFO, cmd.c_str());
 
-            res = complier(cmd);
+            res = asssemler(cmd);
             log_bin32(DEBUG, "Complier:", res);
             
             if (res == -1) {
@@ -48,6 +48,11 @@ int main()
             }
 
             cmds[i][cnt_cmd++] = res;
+
+            if (is_last_command()) {
+                cmds[i][cnt_cmd++] = 0;
+                break;
+            }
 
             if (cnt_cmd == CMD_MAX) {
                 log_out(ERROR, "Commands Reach MAX");
@@ -98,7 +103,7 @@ int main()
         log_out_int(INFO, "Situation", situations[i], "");
 
         for(int j = 0; j < n; j++) {
-            int id = (situations[i] >> j) & 1;
+            int id = situations[i] & 1;
             situations[i] >>= 1;
 
             string identity = id ? "Knight" : "Knave";
