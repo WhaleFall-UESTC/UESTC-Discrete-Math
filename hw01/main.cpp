@@ -3,9 +3,11 @@
 
 #include <iostream>
 #include <bitset>
+#include <list>
+
+#define MAX_N 64
 
 using namespace std;
-
 
 int main()
 {
@@ -19,12 +21,17 @@ int main()
     string Enter;
     getline(cin, Enter);
 
-    log_int(INFO, "The number of people is", n);
+    if (n > MAX_N) {
+        log_out(ERROR, "Too many people, please try again");
+        exit(-1);
+    }
+    else
+        log_int(INFO, "The number of people is", n);
 
     const int N = n;
     const int S = 1 << n;
     copy_n(n);
-    int situations[S] = {};
+    list<long>situations;
     int cnt_ok = 0;
     string cmd;
     command res, cmds[N][CMD_MAX] = {};
@@ -65,8 +72,8 @@ int main()
 
     puts("");
 
-    for(int cond = 0; cond < S; cond++) {
-        log_int(INFO, "In situatoon", cond);
+    for(long cond = 0; cond < S; cond++) {
+        log_int(INFO, "In situation", cond);
         bool this_cond = true;
 
         for(int j = 0; j < n; j++) {
@@ -87,10 +94,12 @@ int main()
         }
 
         if(this_cond) {
-            situations[cnt_ok++] = cond;
+            situations.push_back(cond);
             log_out_int(INFO, "Situation", cond, "meets the question set!");
         }
     }
+
+    cnt_ok = situations.size();
 
     if (cnt_ok == 0 || cnt_ok == 1) 
         log_out_int(INFO, "Total", cnt_ok, "situstion meets the question set.");
@@ -98,13 +107,16 @@ int main()
         log_out_int(INFO, "Total", cnt_ok, "situstions meet the question set.");
 
 
-    for(int i = 0; i < cnt_ok; i++) {
+    while (!situations.empty()) {
+        long ans = situations.front();
+        situations.pop_front();
+
         puts("");
-        log_out_int(INFO, "Situation", situations[i], "");
+        log_out_int(INFO, "Situation", ans, "");
 
         for(int j = 0; j < n; j++) {
-            int id = situations[i] & 1;
-            situations[i] >>= 1;
+            int id = ans & 1;
+            ans >>= 1;
 
             string identity = id ? "Knight" : "Knave";
             cout << "[INFO]\tPerson " << j << " is a " << identity << endl;

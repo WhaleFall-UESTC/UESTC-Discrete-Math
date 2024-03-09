@@ -20,7 +20,7 @@ int get_n(std::string n);
 int get_reg(std::string reg);
 
 
-int emulator(unsigned cond, command * cmds)
+int emulator(long cond, command * cmds)
 {
     int registers[REGS_MAX] = {};
     int op = -1, n1 = 0, n2 = 0, reg = 0;
