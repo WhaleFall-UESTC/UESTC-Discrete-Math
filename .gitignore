@@ -1,2 +1,7 @@
 *.pdf
 log
+
+*.[oa]
+
+.vscode
+.idea
