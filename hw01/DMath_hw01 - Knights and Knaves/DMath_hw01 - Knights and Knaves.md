@@ -78,8 +78,8 @@ for (int cond = 0; cond < 1 << n; cond ++)
 
 ```assembly_x86
 and 0,1,%r1
-iff    3,5,%r2
-or    %r1,%r2,%r1
+iff 3,5,%r2
+or %r1,%r2,%r1
 ret
 ```
 
@@ -98,9 +98,27 @@ xor 2,0
 
 <br/>
 
+## 运行时图片
+
+#### case 1
+
+![截图](c18d0b1c821639c9261631ed7e3331df.png)
+
+#### case 2
+
+![截图](5b04e64cf01308f9483d9a01fecb3d38.png)
+
+#### log
+
+![截图](6dca300e18eba5eec259ca35c2496cf6.png)
+
+<br/>
+
+<br/>
+
 ## 其他
 
-- 编译请用 `g++` 
+- 编译请用 `g++`
 
 ```sh
 g++ -O2 -o prog main.cpp complier.cpp logger.cpp

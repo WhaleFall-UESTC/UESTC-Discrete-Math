@@ -42,7 +42,7 @@ int emulator(long cond, command * cmds)
                 return registers[1];
 
             case NOT:
-                registers[reg] = ~n1;
+                registers[reg] = 1 - n1;
 
             case MOV:
                 registers[reg] = n1;
