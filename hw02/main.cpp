@@ -1,65 +1,48 @@
-#include <iostream>
-#include <cstring>
-#include <cmath>
+#include "complier+.h"
+#include "logger.h"
 
 using namespace std;
 
-typedef unsigned long condition;
-
-int main(int argc, char **argv)
+int main(int argc, char **argv) 
 {
-    /* Input parameters */
+    string ENTER;
+    string prop;
 
-    int n = -1;             // number of digits in the domai:/
-    char *domain;           // domain, {1, 2, ...}
-    int len = 0;            // length of the string of domain
-    int atoms = 2;          // number of atom propositions
-    int flags = -1;         // wether parameter is -n or -u
+    int n = 0;  // number of elements in domain
+    int u = 2;  // number of atom prpositions. 0 denotes P(x) and 1 denotes Q(x)
 
-    enum {Domain, N, Atoms};
-
-    for (int i = 0; i < argc; i++) {
-        if (argv[i][0] == '-') {
-            switch(argv[i][1]) {
-                case 'n': flags = N; break;
-                case 'u': flags = Domain; break;
-                case 'a': flags = Atoms; break;
-            }
-        }
-        else if (flags != -1) {
-            switch(flags) {
-                case N: 
-                    n = atoi(argv[i]);
-                    break;
-                case Domain:
-                    len = strlen(argv[i]);
-                    domain = (char *)malloc(len * sizeof(char));
-                    strcpy(domain, argv[i]);
-                case Atoms:
-                    atoms = atoi(argv[i]);
-            }
-        }
-    }
-
-    if (n == -1) {
-        n += 2;
-        for (int i = 0; i < len; i++) 
-            if (domain[i] == ',')
-                n++;      
-    }
-
-    if (n == -1)
-        exit(-1);
-
-    const condition COND = pow(n, atoms);
-
+    cout << "input the number of elements in domain：";
+    cin >> n;
+    getline(cin,ENTER);
+    log_int(INFO, "n =", n);
 
     
-    /* Check Proposition 1 */
+    for (int i = 0; ; i++) {
+        log_out_int(INFO, "Check proposition", i, "");
 
-    for (condition cond = 0; cond < COND; cond++) {
-        for (int i = 0; i < n; i++) {
-            
+        getline(cin, prop);
+
+        if (prop.empty()) {
+            break;
+            log_out(ERROR, "Proposition Empty");
+            exit(-1);
+        }
+
+        switch(prop[0]) {
+            case 'P': {
+
+            }
+
+            case 'A': {
+
+            }
+
+            case 'E': {
+
+            }
+
+            default: {
+                
         }
     }
 }
