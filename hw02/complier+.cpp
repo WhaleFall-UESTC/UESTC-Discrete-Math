@@ -12,23 +12,23 @@ enum OPCODES {RET, MOV, NOT, AND, OR, XOR, IMP, IFF};
 std::map<std::string, unsigned>opcodes;
 
 enum REGS {NONE, R1, R2, R3, R4, R5, R6, R7};
-std::map<std::string, unsigned>regs;
+std::map<std::string, int>regs;
 
 int n_copy = 0;
 bool end_command = false;
+int registers[REGS_MAX] = {};
 
 
 int get_n(std::string n);
 int get_reg(std::string reg);
 
 
-int emulator(long cond, command * cmds)
+int emulator(long cond, list<command> cmds)
 {
-    int registers[REGS_MAX] = {};
     int op = -1, n1 = 0, n2 = 0, reg = 0;
 
     while (true) {
-        command cmd = *cmds;
+        command cmd = cmds.front();
 
         if ((cmd >> 14) & 1 == 0) {
             log(DEBUG, "Check 14th is 0");
@@ -82,18 +82,21 @@ int emulator(long cond, command * cmds)
                 return -1;
         }
 
-        cmds++;
+        cmds.pop_front();
     }
 }
 
 
-command asssemler(std::string prop)
+command assembler(std::string prop)
 {
     int op = -1;
     int n1 = 0, n2 = 0;
     int reg = 0;
 
-    int idx_blank = prop.find(SEPARATOR);
+    int idx_blank = prop.find(' ');
+    if (idx_blank == prop.npos)
+        idx_blank = prop.find(',');
+
     std::string opcode_s(prop, 0, idx_blank);
     std::string args(prop, idx_blank + 1); 
 
@@ -257,4 +260,9 @@ void copy_n(int n)
 bool is_last_command() 
 {
     return end_command;
+}
+
+int mod_reg(std::string reg, int value)
+{
+    registers[regs[reg]] = value;
 }
