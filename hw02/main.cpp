@@ -1,103 +1,174 @@
-#include "complier+.h"
-#include "logger.h"
+#include <iostream>
+#include <string>
+
+#define LEFT false
+#define RIGHT true
+#define ANY false
+#define EXIST true
+#define IMP(a, b) (!a)||b
+#define IFF(a, b) !(a^b)
 
 using namespace std;
 
-map<string, list<command> >cmds_map;
-int regs[10] = {};
+
+void report_side(int prop_id, bool side, bool value) {
+    const char* side_s = side ? "right" : "left";
+    const char* value_s = value ? "TRUE" : "FALSE";
+    cout << "The " << side_s << " side of the Proposition " << prop_id << " is " << value_s << endl;
+}
+
+void report_prop(int prop_id, bool value) {
+    const char* value_s = value ? "TRUE" : "FALSE";
+    cout << "Proposition " << prop_id << " is " << value_s << "\n\n";
+}
+
+bool any(int sit, int n) {
+    return sit == (1 << n) - 1;
+}
+
+bool exist(int sit) {
+    return sit != 0;
+}
+
 
 int main(int argc, char **argv) 
 {
-    string ENTER;
-    string prop;
-
-    int n = 0;  // number of elements in domain
-    int a = 2;  // number of atom prpositions. 0 denotes P(x) and 1 denotes Q(x)
-
-    cout << "input the number of elements in domain：";
+    //int n = atoi(argv[1]);  // The number of elements in domain
+    int n;
     cin >> n;
-    getline(cin,ENTER);
-    log_int(INFO, "n =", n);
+    int a = 2;              // The number of atom props
+    const long N = 1 << a * n;
+    const int mask = (1 << n) - 1;
 
-    const long N = 1 << n * a;
+    bool r, l, p;
 
-    
-    for (int i = 0; ; i++) {
-        log_out_int(INFO, "Check proposition", i, "");
 
-        while(true) 
-        {
-            getline(cin, prop);
-            if (prop.empty()) {
-                log_out(WARN, "Proposition Empty");
-                i--;
+
+    /*--------------------------
+        Check Proposition 1
+    ---------------------------*/
+    p = true;
+
+    for (long sit = 0; sit < N; sit++) 
+    {
+        int pi = (sit >> n) & mask;
+        int qi = sit & mask;
+
+        l = true;
+        r = any(pi, n) || any(qi, n);
+        //report_side(1, RIGHT, r);
+
+        for (int i = 0; i < n; i++) {
+            if (((pi >> i) & 1) | ((qi >> i) & 1) == 0) {
+                l = false;
                 break;
             }
+        }
+        //report_side(1, LEFT, l);
 
-            int blank_idx1 = prop.find(' ');
-            int blank_idx2 = prop.rfind(' ');
+        if (l ^ r) {
+            p = false;
+            break;
+        }
+    }
 
-            switch(prop[0]) {
-                case 'P': {
-                    string prop_name(prop, blank_idx1 + 1);
-                    log_out(INFO, prop_name.c_str());
+    report_prop(1, p);
 
-                    list<command> cmds_tmp;
 
-                    for (int j = 0; ; j++) {
-                        getline(cin, prop);
-                        cmds_tmp.push_back(assembler(prop));
 
-                        if (is_last_command())
-                            break;
-                    }
+    /*--------------------------
+        Check Proposition 2
+    ---------------------------*/
+    p = true;
 
-                    cmds_map[prop_name] = cmds_tmp;
-                    break;
-                }
+    for (long sit = 0; sit < N; sit++) 
+    {
+        int pi = (sit >> n) & mask;
+        int qi = sit & mask;
 
-                case 'A': {
-                    string cmd(prop, 0, blank_idx1);
-                    string reg(prop, blank_idx2 + 1);  
+        l = false;
+        r = exist(pi) && exist(qi);
+        //report_side(1, RIGHT, r);
 
-                    command res = assembler(cmd);
-                    list<command> cmd_tmp;
-
-                    if (res == -1) 
-                        cmd_tmp = cmds_map[cmd];
-                    else 
-                        cmd_tmp.push_back(res);
-                    
-
-                    for (long cond = 0; cond < N; cond++)
-                    {
-                        long situ = 0;
-                        for (int j = a - 1; j > 0; j--) {
-                            int value = (cond >> j * n) & 1;
-                            situ <<= 1;
-                            situ |= value;
-                        }
-
-                        if (!emulator(situ, cmd_tmp)) {
-                            mod_reg(reg, 0);
-                            goto END_ANY;
-                        }
-
-                        mod_reg(reg, 1);
-                    }
-
-                    END_ANY:
-                    break;
-                }
-
-                case 'E': {
-                    
-                }
-
-                default: {
-                    
+        for (int i = 0; i < n; i++) {
+            if (((pi >> i) & 1) & ((qi >> i) & 1) == 1) {
+                l = true;
+                break;
             }
         }
+        //report_side(1, LEFT, l);
 
+        if (l ^ r) {
+            p = false;
+            break;
+        }
     }
+
+    report_prop(2, p);
+
+
+
+    /*--------------------------
+        Check Proposition 3
+    ---------------------------*/
+    p = true;
+
+    for (long sit = 0; sit < N; sit++) 
+    {
+        int pi = (sit >> n) & mask;
+        int qi = sit & mask;
+
+        l = true;
+        r = IMP(any(pi, n), any(qi, n));
+        //report_side(1, RIGHT, r);
+
+        for (int i = 0; i < n; i++) {
+            if (!IMP(((pi >> i) & 1), ((qi >> i) & 1))) {
+                l = false;
+                break;
+            }
+        }
+        //report_side(1, LEFT, l);
+
+        if (l ^ r) {
+            p = false;
+            break;
+        }
+    }
+
+    report_prop(3, p);
+
+
+
+    /*--------------------------
+        Check Proposition 4
+    ---------------------------*/
+    p = true;
+
+    for (long sit = 0; sit < N; sit++) 
+    {
+        int pi = (sit >> n) & mask;
+        int qi = sit & mask;
+
+        l = false;
+        r = IMP(exist(pi), exist(qi));
+        //report_side(1, RIGHT, r);
+
+        for (int i = 0; i < n; i++) {
+            if (IMP(((pi >> i) & 1), ((qi >> i) & 1))) {
+                l = true;
+                break;
+            }
+        }
+        //report_side(1, LEFT, l);
+
+        if (l ^ r) {
+            p = false;
+            break;
+        }
+    }
+
+    report_prop(4, p);
+
+    return 0;
 }
