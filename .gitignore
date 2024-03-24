@@ -5,3 +5,6 @@ log
 
 .vscode
 .idea
+
+*.zip
+*.7z
