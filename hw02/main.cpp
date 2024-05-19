@@ -170,37 +170,5 @@ int main(int argc, char **argv)
 
     report_prop(4, p);
 
-
-
-    /* My Proposition */
-
-    p = true;
-
-    for (long sit = 0; sit < N; sit++) 
-    {
-        int pi = (sit >> n) & mask;
-        int qi = sit & mask;
-
-
-        l = true;
-        r = any(pi, n) && any(qi, n);
-        report_side(1, RIGHT, r);
-
-        for (int i = 0; i < n; i++) {
-            if (!(((pi >> i) & 1) & ((qi >> i) & 1))) {
-                l = false;
-                break;
-            }
-        }
-        report_side(1, LEFT, l);
-
-        if (l ^ r) {
-            p = false;
-            break;
-        }
-    }
-
-    report_prop(0, p);
-
     return 0;
 }

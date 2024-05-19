@@ -1,0 +1,53 @@
+Tue Mar 12 21:47:35 2024
+
+[INFO]	The number of people is 2
+[INFO]	Proposition from the person with ID 0
+[INFO]	mov 1
+[DEBUG]	Complier: 00100000000000010000000000000001
+[INFO]	Proposition from the person with ID 1
+[INFO]	xor 0,1
+[DEBUG]	Complier: 10100000000000000000000000001001
+[INFO]	In situation 0
+[INFO]	Check proposition 0
+[DEBUG]	Run cmd 00100000000000010000000000000001
+[DEBUG]	Run cmd 00000000000000000000000000000000
+[DEBUG]	The result is 0
+[DEBUG]	This person is 0
+[INFO]	Match the condition
+[INFO]	Check proposition 1
+[DEBUG]	Run cmd 10100000000000000000000000001001
+[DEBUG]	Run cmd 00000000000000000000000000000000
+[DEBUG]	The result is 0
+[DEBUG]	This person is 0
+[INFO]	Match the condition
+[INFO]	Situation 0 meets the question set!
+[INFO]	In situation 1
+[INFO]	Check proposition 0
+[DEBUG]	Run cmd 00100000000000010000000000000001
+[DEBUG]	Run cmd 00000000000000000000000000000000
+[DEBUG]	The result is 0
+[DEBUG]	This person is 1
+[INFO]	Contradiction. Pass
+[INFO]	In situation 2
+[INFO]	Check proposition 0
+[DEBUG]	Run cmd 00100000000000010000000000000001
+[DEBUG]	Run cmd 00000000000000000000000000000000
+[DEBUG]	The result is 1
+[DEBUG]	This person is 0
+[INFO]	Contradiction. Pass
+[INFO]	In situation 3
+[INFO]	Check proposition 0
+[DEBUG]	Run cmd 00100000000000010000000000000001
+[DEBUG]	Run cmd 00000000000000000000000000000000
+[DEBUG]	The result is 1
+[DEBUG]	This person is 1
+[INFO]	Match the condition
+[INFO]	Check proposition 1
+[DEBUG]	Run cmd 10100000000000000000000000001001
+[DEBUG]	Run cmd 00000000000000000000000000000000
+[DEBUG]	The result is 0
+[DEBUG]	This person is 1
+[INFO]	Contradiction. Pass
+[INFO]	Total 1 situstion meets the question set.
+[INFO]	Situation 0 
+[INFO]	Execution finished successfully
